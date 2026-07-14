@@ -1,13 +1,18 @@
 package model;
+
+import interfaces.Registrable;
+
 /**
  * Representa un guía turístico dentro del sistema Llanquihue Tour.
- * Hereda los atributos y métodos de la clase Persona.
+ * Hereda los atributos y métodos de la clase Persona
+ * e implementa el contrato definido por Registrable.
  *
  * @author Maximiliano Villalobos
  * @version 1.0
  * @since 1.0
  */
-public class Guia extends Persona {
+public class Guia extends Persona implements Registrable {
+
     private String especialidad;
     private int aniosExperiencia;
     private String idioma;
@@ -18,18 +23,19 @@ public class Guia extends Persona {
     public Guia() {
         super();
     }
+
     /**
      * Crea un guía con todos sus atributos.
      *
      * @param especialidad Especialidad del guía.
      * @param aniosExperiencia Años de experiencia.
      * @param idioma Idioma principal que domina.
-     * @param nombre Nombre.
-     * @param apellido Apellido.
-     * @param rut Rut.
-     * @param direccion Dirección.
-     * @param telefono Teléfono.
-     * @param correoElectronico Correo electrónico.
+     * @param nombre Nombre del guía.
+     * @param apellido Apellido del guía.
+     * @param rut RUT del guía.
+     * @param direccion Dirección del guía.
+     * @param telefono Teléfono del guía.
+     * @param correoElectronico Correo electrónico del guía.
      */
     public Guia(String especialidad,
                 int aniosExperiencia,
@@ -40,16 +46,18 @@ public class Guia extends Persona {
                 Direccion direccion,
                 String telefono,
                 String correoElectronico) {
+
         super(nombre, apellido, rut, direccion, telefono, correoElectronico);
+
         this.especialidad = especialidad;
         this.aniosExperiencia = aniosExperiencia;
         this.idioma = idioma;
-
     }
+
     /**
      * Obtiene la especialidad del guía.
      *
-     * @return Especialidad.
+     * @return Especialidad del guía.
      */
     public String getEspecialidad() {
         return especialidad;
@@ -85,7 +93,7 @@ public class Guia extends Persona {
     /**
      * Obtiene el idioma principal del guía.
      *
-     * @return Idioma.
+     * @return Idioma principal.
      */
     public String getIdioma() {
         return idioma;
@@ -101,17 +109,37 @@ public class Guia extends Persona {
     }
 
     /**
+     * Ejecuta el registro del guía.
+     */
+    @Override
+    public void registrar() {
+        System.out.println(
+                "Guía registrado: "
+                        + getNombre() + " "
+                        + getApellido()
+                        + " - Especialidad: "
+                        + especialidad
+        );
+    }
+
+    /**
+     * Muestra los datos completos del guía.
+     */
+    @Override
+    public void mostrarDatos() {
+        System.out.println(this);
+    }
+
+    /**
      * Devuelve la información del guía.
      *
-     * @return Información del guía.
+     * @return Información formateada del guía.
      */
     @Override
     public String toString() {
-
         return super.toString()
                 + "\nEspecialidad: " + especialidad
                 + "\nAños de experiencia: " + aniosExperiencia
                 + "\nIdioma: " + idioma;
-
     }
 }
