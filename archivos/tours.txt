@@ -1,0 +1,3 @@
+101;Ruta cultural de Llanquihue;Cultural;Llanquihue;25000;15;true;09:00;13:00;Visita al museo, recorrido patrimonial y costanera;4
+102;Sabores del lago;Gastronómico;Puerto Varas;38000;12;true;10:00;15:00;Degustación de productos locales y visita a restaurantes;5
+103;Aventura en los volcanes;Aventura;Parque Nacional Vicente Pérez Rosales;55000;10;true;08:00;17:00;Senderismo, miradores y recorrido por Saltos del Petrohué;9

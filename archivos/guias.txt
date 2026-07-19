@@ -1,0 +1,3 @@
+Turismo cultural;8;Español;Pedro;Alvarado;15345678;K;Vicente Pérez Rosales;320;Llanquihue;Llanquihue;Los Lagos;934567890;pedro.alvarado@email.cl
+Turismo gastronómico;5;Inglés;Laura;Navarro;18987654;8;Imperial;610;Puerto Varas;Puerto Varas;Los Lagos;945678901;laura.navarro@email.cl
+Turismo aventura;10;Español;Diego;Contreras;17654321;3;Ejército;740;Puerto Montt;Puerto Montt;Los Lagos;956789012;diego.contreras@email.cl
