@@ -1,29 +1,31 @@
 package service;
-import interfaces.Registrable;
+
+import model.Cliente;
 import model.Guia;
 import model.Persona;
-import model.Cliente;
 import model.Proveedor;
 
 import java.util.ArrayList;
 
 /**
- * Gestiona las personas registrables del sistema Llanquihue Tour.
+ * Gestiona las personas registradas en el sistema
+ * Llanquihue Tour.
  *
- * Permite almacenar clientes, guías y proveedores dentro de una
- * misma colección, aplicando interfaces, polimorfismo y el operador
- * instanceof.
+ * Permite agregar, listar, buscar y eliminar personas.
+ * También permite filtrar los objetos según sean
+ * clientes, guías o proveedores.
  *
  * @author Maximiliano Villalobos
  * @version 1.0
  * @since 1.0
  */
-
 public class PersonaService {
-    private ArrayList<Registrable> personas;
+
+    private ArrayList<Persona> personas;
 
     /**
-     * Crea el servicio e inicializa la colección de personas.
+     * Crea el servicio e inicializa la colección
+     * de personas.
      */
     public PersonaService() {
         this.personas = new ArrayList<>();
@@ -32,83 +34,93 @@ public class PersonaService {
     /**
      * Obtiene la colección de personas registradas.
      *
-     * @return Colección de objetos registrables.
+     * @return Colección de personas.
      */
-    public ArrayList<Registrable> getPersonas() {
+    public ArrayList<Persona> getPersonas() {
         return personas;
     }
 
     /**
      * Modifica la colección de personas registradas.
      *
-     * @param personas Nueva colección de objetos registrables.
+     * @param personas Nueva colección de personas.
      */
-    public void setPersonas(ArrayList<Registrable> personas) {
+    public void setPersonas(ArrayList<Persona> personas) {
         this.personas = personas;
     }
 
     /**
-     * Agrega una persona registrable a la colección.
+     * Agrega una persona a la colección.
      *
-     * @param persona Cliente, guía o proveedor que se agregará.
-     * @return {@code true} si la persona fue agregada;
-     *         {@code false} si el objeto recibido es nulo.
+     * Antes de agregarla, comprueba que no sea nula
+     * y que no exista otra persona con el mismo RUT.
+     *
+     * @param persona Persona que se desea agregar.
+     * @return true si la persona fue agregada;
+     *         false si no cumple las condiciones.
      */
-    public boolean agregarPersona(Registrable persona) {
+    public boolean agregarPersona(Persona persona) {
 
         if (persona == null) {
             return false;
         }
 
-        personas.add(persona);
-        persona.registrar();
+        if (persona.getRut() == null) {
+            return false;
+        }
 
+        String rutCompleto = persona.getRut().toString();
+
+        if (buscarPorRut(rutCompleto) != null) {
+            return false;
+        }
+
+        personas.add(persona);
         return true;
     }
 
     /**
-     * Muestra los datos de todas las personas registradas.
-     *
-     * Cada objeto ejecuta su propia implementación del método
-     * mostrarDatos, demostrando el uso de polimorfismo.
+     * Muestra todas las personas registradas.
      */
     public void listarPersonas() {
 
         if (personas.isEmpty()) {
-            System.out.println("No existen personas registradas.");
+            System.out.println(
+                    "No existen personas registradas."
+            );
             return;
         }
 
-        System.out.println("\n=== PERSONAS REGISTRADAS ===");
+        System.out.println(
+                "\n=== PERSONAS REGISTRADAS ==="
+        );
 
-        for (Registrable persona : personas) {
-            persona.mostrarDatos();
+        for (Persona persona : personas) {
+            System.out.println(persona);
             System.out.println("----------------------------");
         }
     }
 
     /**
-     * Busca una persona mediante su RUT completo.
-     *
-     * El RUT debe ingresarse en formato número-dígito,
-     * por ejemplo: 12345678-5.
+     * Busca una persona mediante su RUT.
      *
      * @param rutBuscado RUT que se desea buscar.
-     * @return Persona encontrada o {@code null} si no existe.
+     * @return Persona encontrada o null si no existe.
      */
     public Persona buscarPorRut(String rutBuscado) {
 
-        for (Registrable registrable : personas) {
+        if (rutBuscado == null) {
+            return null;
+        }
 
-            if (registrable instanceof Persona) {
+        for (Persona persona : personas) {
 
-                Persona persona = (Persona) registrable;
+            if (persona.getRut() != null
+                    && persona.getRut()
+                    .toString()
+                    .equalsIgnoreCase(rutBuscado)) {
 
-                if (persona.getRut() != null
-                        && persona.getRut().toString().equalsIgnoreCase(rutBuscado)) {
-
-                    return persona;
-                }
+                return persona;
             }
         }
 
@@ -116,28 +128,30 @@ public class PersonaService {
     }
 
     /**
-     * Elimina una persona de la colección mediante su RUT.
+     * Elimina una persona mediante su RUT.
      *
-     * @param rutBuscado RUT de la persona que se eliminará.
-     * @return {@code true} si la persona fue eliminada;
-     *         {@code false} si no fue encontrada.
+     * @param rutBuscado RUT de la persona que se
+     *                   desea eliminar.
+     * @return true si la persona fue eliminada;
+     *         false si no fue encontrada.
      */
     public boolean eliminarPorRut(String rutBuscado) {
 
+        if (rutBuscado == null) {
+            return false;
+        }
+
         for (int i = 0; i < personas.size(); i++) {
 
-            Registrable registrable = personas.get(i);
+            Persona persona = personas.get(i);
 
-            if (registrable instanceof Persona) {
+            if (persona.getRut() != null
+                    && persona.getRut()
+                    .toString()
+                    .equalsIgnoreCase(rutBuscado)) {
 
-                Persona persona = (Persona) registrable;
-
-                if (persona.getRut() != null
-                        && persona.getRut().toString().equalsIgnoreCase(rutBuscado)) {
-
-                    personas.remove(i);
-                    return true;
-                }
+                personas.remove(i);
+                return true;
             }
         }
 
@@ -145,78 +159,96 @@ public class PersonaService {
     }
 
     /**
-     * Muestra únicamente los clientes registrados.
+     * Muestra solamente las personas que corresponden
+     * a objetos de tipo Cliente.
      */
     public void listarClientes() {
 
-        System.out.println("\n=== CLIENTES REGISTRADOS ===");
-
         boolean existenClientes = false;
 
-        for (Registrable persona : personas) {
+        System.out.println(
+                "\n=== CLIENTES REGISTRADOS ==="
+        );
+
+        for (Persona persona : personas) {
 
             if (persona instanceof Cliente) {
-                persona.mostrarDatos();
+                System.out.println(persona);
                 System.out.println("----------------------------");
+
                 existenClientes = true;
             }
         }
 
         if (!existenClientes) {
-            System.out.println("No existen clientes registrados.");
+            System.out.println(
+                    "No existen clientes registrados."
+            );
         }
     }
 
     /**
-     * Muestra únicamente los guías registrados.
+     * Muestra solamente las personas que corresponden
+     * a objetos de tipo Guia.
      */
     public void listarGuias() {
 
-        System.out.println("\n=== GUÍAS REGISTRADOS ===");
-
         boolean existenGuias = false;
 
-        for (Registrable persona : personas) {
+        System.out.println(
+                "\n=== GUÍAS REGISTRADOS ==="
+        );
+
+        for (Persona persona : personas) {
 
             if (persona instanceof Guia) {
-                persona.mostrarDatos();
+                System.out.println(persona);
                 System.out.println("----------------------------");
+
                 existenGuias = true;
             }
         }
 
         if (!existenGuias) {
-            System.out.println("No existen guías registrados.");
+            System.out.println(
+                    "No existen guías registrados."
+            );
         }
     }
 
     /**
-     * Muestra únicamente los proveedores registrados.
+     * Muestra solamente las personas que corresponden
+     * a objetos de tipo Proveedor.
      */
     public void listarProveedores() {
 
-        System.out.println("\n=== PROVEEDORES REGISTRADOS ===");
-
         boolean existenProveedores = false;
 
-        for (Registrable persona : personas) {
+        System.out.println(
+                "\n=== PROVEEDORES REGISTRADOS ==="
+        );
+
+        for (Persona persona : personas) {
 
             if (persona instanceof Proveedor) {
-                persona.mostrarDatos();
+                System.out.println(persona);
                 System.out.println("----------------------------");
+
                 existenProveedores = true;
             }
         }
 
         if (!existenProveedores) {
-            System.out.println("No existen proveedores registrados.");
+            System.out.println(
+                    "No existen proveedores registrados."
+            );
         }
     }
 
     /**
      * Obtiene la cantidad total de personas registradas.
      *
-     * @return Cantidad de elementos almacenados.
+     * @return Cantidad de personas.
      */
     public int obtenerCantidadPersonas() {
         return personas.size();
